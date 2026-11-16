@@ -1,0 +1,6 @@
+^docs$
+^_pkgdown\.yml$
+^\.github$
+^\.Rproj\.user$
+^.*\.Rproj$
+^vignettes/\.quarto$
