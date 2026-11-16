@@ -1,17 +1,43 @@
-# bst260project-template
+# finalproject
 
-Instructions and template for projects for 2026 HSPH BST260
+Yumin Min’s final project for Harvard BST260, Fall 2026.
 
-Your project will be a working GitHub pages site that presents your
-interpretation of features of public health datasets.
+This repository contains an R package and its accompanying [project
+website](https://mint0o01.github.io/finalproject/). The website
+infrastructure is in place; the project proposal and analyses are under
+development.
 
-Please see
+## Installation
+
+``` r
+
+install.packages("devtools") # if needed
+devtools::install_github("Mint0o01/finalproject")
+data("waterborne", package = "finalproject")
+```
+
+## Building the website
+
+Install the [Quarto command-line
+tool](https://quarto.org/docs/get-started/) and the R packages `pkgdown`
+and `quarto`. From the repository root, run:
+
+``` r
+
+pkgdown::build_site()
+```
+
+Commit the generated `docs/` directory to `main`. GitHub Pages publishes
+the site from the `/docs` folder on that branch.
+
+## Course resources
+
+This project is based on Vincent Carey’s [BST260 project
+template](https://github.com/vjcitn/bst260project-template). The
+instructor’s
 [instructions](https://vjcitn.github.io/bst260project-template/articles/instructions.html)
-to set up the infrastructure for your project and to learn about
-available datasets
+and [project
+suggestions](https://vjcitn.github.io/bst260project-template/articles/stubs.html)
+are retained as reference articles.
 
-Please see [project suggestion
-text](https://vjcitn.github.io/bst260project-template/articles/stubs.html)
-for some suggestions of how you might proceed with project work on
-selected datasets. More content will be added to this page in the near
-future.
+Contact: <ymin1@hsph.harvard.edu>.
