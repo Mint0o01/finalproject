@@ -1,0 +1,61 @@
+---
+title: "State firearm-law changes and firearm mortality, 2014–2024"
+author: "Yumin Min"
+date: "2026-11-18"
+format:
+  html:
+    toc: true
+    number-sections: true
+---
+
+**To:** BST260 Teaching Team, Fall 2026
+
+## Question
+
+Among the 50 states and the District of Columbia, were years with more restrictive than permissive firearm-law implementations in the preceding calendar year associated with lower age-adjusted firearm death rates from 2014 through 2024?
+
+I chose this question because the course package already contains both state firearm-law records and state firearm-mortality data. The question is narrow enough for the project timeline, but it also leaves room to show how the way we summarize a policy database affects the answer. I will describe an association, not claim that a law change caused a change in deaths.
+
+## Data, population, and unit of analysis
+
+I will use two datasets included in my `finalproject` package:
+
+- `gunleg` contains state-level firearm-law records. The fields I plan to use are `State`, `Law.ID`, `Effect`, `Type.of.Change`, and `Effective.Date.Year`. These records are supplied through the course package and originate from RAND’s [State Firearm Law Database](https://www.rand.org/research/gun-policy/law-navigator.html).
+- `cdcfiremort` contains state-level firearm deaths and rates from CDC/NCHS [Stats of the States](https://www.cdc.gov/nchs/state-stats/deaths/firearms.html). The outcome will be `Death.Rate`, an age-adjusted firearm death rate per 100,000 people. I will retain `Deaths.` for descriptive context, but not use the raw count as the outcome because state populations differ.
+
+The population is residents of the 50 states and the District of Columbia. The unit of analysis is a state-year. The mortality data provide a continuous series for 2014–2024, as well as a separate 2005 set of observations. I will use 2014–2024 for the main analysis so that the years in the panel are consecutive. The one-year-lagged exposure will therefore use law implementations from 2013–2023.
+
+## Exposure and outcome
+
+For each state and year, I will count records with `Type.of.Change == "Implement"` by their `Effect` and effective year. The primary exposure will be the number of restrictive implementations minus the number of permissive implementations in the previous year. An implementation with no recorded effective year will not be assigned to a year; I will report how many records are affected. I will show modifications and repeals separately rather than treating every database row as a new law. As a sensitivity check, I will also model restrictive and permissive implementation counts separately and examine whether results differ across broad law classes.
+
+The outcome is continuous: the CDC age-adjusted firearm death rate for each state-year. Age adjustment makes rates more comparable across places with different age distributions. The rate includes firearm deaths across intents; this proposal does not separate suicide, homicide, and other deaths.
+
+## Confounding and analysis plan
+
+Before looking at the association, I will specify state and calendar-year fixed effects in the primary model. State effects account for stable differences among states, such as geography and long-standing political or firearm context. Year effects account for national changes shared across states. I will use standard errors clustered by state because yearly observations from the same state are related.
+
+The primary model is:
+
+```text
+DeathRate[state, year] = intercept
+  + beta * NetImplementations[state, previous year]
+  + state fixed effects + year fixed effects + error
+```
+
+I will first document the two datasets, inspect their state and year fields, and summarize missingness. I will then report descriptive summaries and plots of policy implementations and mortality rates before fitting the model. The estimate for `beta` will be interpreted as the within-state association between prior-year policy implementations and the following year’s mortality rate.
+
+The two supplied datasets do not include time-varying measures such as firearm ownership or state economic conditions. I will not imply that fixed effects remove all confounding. If I decide to add a new source for these covariates, I will first ask the teaching team whether it is in scope.
+
+## Planned website articles
+
+I plan to write at least two analysis vignettes using the two distinct course datasets:
+
+1. `vignettes/gunleg.qmd` will document the RAND data source, explain the policy fields and coding decisions, and summarize when restrictive and permissive implementations occurred across states.
+2. `vignettes/firearm-mortality.qmd` will document the CDC data source, describe state and year patterns in the age-adjusted rates, and present the linked state-year analysis with its limitations.
+
+Each article will include data provenance, descriptive statistics for the variables used, a clear analysis question, and a report of findings with limitations.
+
+## Limitations
+
+The RAND file records laws and their classifications; it does not measure how consistently a policy is enforced or how many people it affects. My net count gives each implementation equal weight, so it is a simple summary rather than a validated measure of overall state firearm policy. The mortality outcome is aggregated at the state level and combines different intents. State-level associations cannot be read as individual-level relationships, and unmeasured changes within states may still explain part of an observed association. I will keep these limits visible when presenting the results.
